@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    name: Forge Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Run unit & fuzz tests
+        run: forge test --match-path "test/Vault*.t.sol" -v
+
+      - name: Run invariant tests
+        run: forge test --match-path "test/VaultInvariant.t.sol" -v
+
+      - name: Print gas report
+        run: forge test --gas-report --match-path "test/VaultTest.t.sol" > gas-report.txt 2>&1 || true
+        continue-on-error: true
+
+      - name: Upload gas report
+        uses: actions/upload-artifact@v4
+        with:
+          name: gas-report
+          path: gas-report.txt
