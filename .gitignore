@@ -1,0 +1,14 @@
+# Foundry artifacts
+cache/
+out/
+
+# Coverage
+coverage/
+lcov.info
+
+# Node
+node_modules/
+
+# Environment
+.env
+.env.*
