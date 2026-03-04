@@ -419,6 +419,21 @@ contract VaultTest is Test {
         assertLt(bobShares, vault.balanceOf(alice), "bob gets fewer shares due to higher share price");
     }
 
+    function test_harvest_emitsEvent() public {
+        uint256 yieldAmount = 50 * ONE_USDC;
+
+        vm.prank(owner);
+        vm.expectEmit(true, false, false, true);
+        emit SimpleVault.Harvested(owner, yieldAmount);
+        vault.harvest(yieldAmount);
+    }
+
+    function test_harvest_zeroAmount_reverts() public {
+        vm.prank(owner);
+        vm.expectRevert(SimpleVault.ZeroAmount.selector);
+        vault.harvest(0);
+    }
+
     function test_totalFeesCollected_accumulates() public {
         vm.prank(alice);
         vault.deposit(1_000 * ONE_USDC, alice);

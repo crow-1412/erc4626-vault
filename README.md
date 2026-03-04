@@ -8,7 +8,7 @@ A production-quality ERC-4626 tokenized vault with deposit/withdraw fees, pausab
 - **Fee mechanism**: configurable deposit fee + withdraw fee (basis points, max 10%), sent to a dedicated fee recipient
 - **Pausability**: owner can halt all vault operations in emergencies
 - **Reentrancy guard**: all state-changing entrypoints are protected
-- **Yield simulation**: `harvest()` lets the owner inject yield to increase share price
+- **Yield simulation**: `harvest()` lets the owner inject non-zero yield to increase share price, and emits `Harvested`
 - **SafeERC20**: all token transfers use OpenZeppelin's safe wrappers
 
 ## Quick Start
@@ -26,7 +26,7 @@ forge build     # compile
 forge test -v
 ```
 
-Expected output: **53 tests passing** (unit + fuzz + invariant).
+Expected output: **55 tests passing** (unit + fuzz + invariant).
 
 ## Project Structure
 
@@ -36,7 +36,7 @@ src/
   MockUSDC.sol          # ERC-20 mock for testing
 
 test/
-  VaultTest.t.sol       # 44 unit tests (happy path, revert, events, edge cases)
+  VaultTest.t.sol       # 46 unit tests (happy path, revert, events, edge cases)
   VaultFuzz.t.sol       # 5 fuzz tests (1000 runs each)
   VaultInvariant.t.sol  # 4 invariant tests (256 runs x 32 depth)
 

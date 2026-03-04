@@ -44,6 +44,7 @@ contract SimpleVault is ERC4626, Ownable, Pausable, ReentrancyGuard {
     event WithdrawFeeUpdated(uint256 oldFee, uint256 newFee);
     event FeeRecipientUpdated(address oldRecipient, address newRecipient);
     event FeesCollected(address indexed recipient, uint256 amount);
+    event Harvested(address indexed caller, uint256 amount);
 
     // -------------------------------------------------------------------------
     // Errors
@@ -117,7 +118,9 @@ contract SimpleVault is ERC4626, Ownable, Pausable, ReentrancyGuard {
     /// This increases totalAssets() and thus the share price.
     /// In production this would be replaced by an actual yield strategy.
     function harvest(uint256 amount) external onlyOwner {
+        if (amount == 0) revert ZeroAmount();
         IERC20(asset()).safeTransferFrom(msg.sender, address(this), amount);
+        emit Harvested(msg.sender, amount);
     }
 
     // -------------------------------------------------------------------------
