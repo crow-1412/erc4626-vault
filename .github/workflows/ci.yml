@@ -35,3 +35,39 @@ jobs:
         with:
           name: gas-report
           path: gas-report.txt
+
+  slither:
+    name: Slither Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Run Slither
+        uses: crytic/slither-action@v0.4.0
+        id: slither
+        with:
+          target: src/SimpleVault.sol
+          fail-on-result: false
+          sarif: results.sarif
+        continue-on-error: true
+
+      - name: Upload SARIF to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: results.sarif
+        continue-on-error: true
+
+      - name: Upload Slither report as artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: slither-report
+          path: results.sarif

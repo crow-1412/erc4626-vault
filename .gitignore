@@ -1,6 +1,7 @@
 # Foundry artifacts
 cache/
 out/
+broadcast/
 
 # Coverage
 coverage/
@@ -9,6 +10,14 @@ lcov.info
 # Node
 node_modules/
 
-# Environment
+# Next.js build output
+frontend/.next/
+
+# Environment files (never commit secrets)
 .env
 .env.*
+!.env.example
+!frontend/.env.local.example
+
+# Frontend local env (secrets)
+frontend/.env.local
